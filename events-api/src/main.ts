@@ -9,6 +9,11 @@ const header_config = {
 /**
  * This file demonstrates how to query the Edlink Events API, which allows you to
  * sync only new changes to the dataset (since a given past event).
+ *
+ * When running a "hot sync" using the Events API for the first time, you should:
+ * 1. Retrieve the last existing event ID, using the saveLastSeenEvent function below, and save to database.
+ * 2. Run a full sync (sample code in the graph-api folder).
+ * 3. Set up a cron script to execute the following function every hour.
  */
 async function loadNewDeltas() {
     // Fill this in with the UUID of the last processed event.
