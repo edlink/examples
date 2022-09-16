@@ -16,7 +16,7 @@ const header_config = {
  * 3. Set up a cron script to execute the following function every hour.
  */
 async function loadNewDeltas() {
-    // Fill this in with the UUID of the last processed event.
+    // Retrieve the UUID of the last processed event.
     let last_processed_event_id = await loadLastEventID();
 
     // This field will hold the url for our next request
