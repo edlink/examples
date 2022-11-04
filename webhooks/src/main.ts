@@ -22,10 +22,11 @@ const WEBHOOK_SECRET = "WEBHOOK_SECRET_GOES_HERE";
 
 /**
  * Parse the Edlink-Signature header, which is in the format:
- * Edlink-Signature: t=1353492033,v0=01552d8e848e021280b9d71e331a0fcc898294b4d16b23edb7a6b11f87ff7a8c
+ * Edlink-Signature: t=1667542876,v0=01552d8e848e021280b9d71e331a0fcc898294b4d16b23edb7a6b11f87ff7a8c
  *
  * Combine the timestamp and the request body contents together, hash them, and check
- * if the result is equal to the provided signature.
+ * if the result is equal to the provided signature. Also check if the given timestamp
+ * was more than five mins ago, and fail if so.
  */
 function validateSignature(header, raw_request_body) {
 
@@ -35,6 +36,15 @@ function validateSignature(header, raw_request_body) {
 
     const content = `${timestamp}.${raw_request_body}`;
     const hash = crypto.createHmac('sha256', WEBHOOK_SECRET).update(content, 'utf8').digest('hex');
+
+    const datetime_sent = new Date(timestamp * 1000);
+
+    const now = new Date();
+    const five_mins_ago = new Date(now.getTime() - (5 * 60 * 1000));
+
+    if(datetime_sent < five_mins_ago) {
+        return false;
+    }
 
     return hash === signature;
 }
